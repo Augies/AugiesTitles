@@ -1,0 +1,8 @@
+language: java
+sudo: false
+
+jdk:
+  - openjdk11
+
+before_install:
+  - chmod +x gradlew
