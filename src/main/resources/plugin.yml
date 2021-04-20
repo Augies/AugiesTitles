@@ -6,3 +6,4 @@ prefix: AugiesTitles
 authors: [Augies]
 description: An easy plugin for managing players' titles
 website: https://github.com/Augies/AugiesTitles
+depend: [Vault]
