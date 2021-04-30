@@ -32,4 +32,5 @@ dependencies {
     // https://mvnrepository.com/artifact/org.json/json
     implementation 'net.milkbowl.vault:VaultAPI:1.7'
     implementation 'net.luckperms:api:5.3'
+    implementation 'mysql:mysql-connector-java:8.0.24'
 }

@@ -1,5 +1,5 @@
 name: TitlesPlugin
-version: ${project.version}${build.number}
+version: 1.0-SNAPSHOT
 main: io.augies.titlesplugin.TitlesPlugin
 api-version: 1.16
 prefix: AugiesTitles

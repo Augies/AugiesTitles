@@ -1,15 +1,15 @@
 package io.augies.titlesplugin.manager.io;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import io.augies.titlesplugin.TitlesPlugin;
 import io.augies.titlesplugin.config.DatabaseConnectionConfiguration;
 import io.augies.titlesplugin.util.IoUtils;
 
 import java.io.File;
 import java.io.FileWriter;
-import java.io.IOException;
+import java.io.Writer;
 import java.nio.file.Files;
-import java.nio.file.Paths;
 
 public class JsonManager {
     private final TitlesPlugin plugin;
@@ -23,11 +23,14 @@ public class JsonManager {
     public JsonManager(){
         plugin = TitlesPlugin.getInstance();
         pluginFolder = plugin.getDataFolder();
-        gson = new Gson();
+        gson = new GsonBuilder().setPrettyPrinting().create();
         reloadJsonConfigurations();
     }
 
     public void reloadJsonConfigurations(){
+        if(!pluginFolder.exists()){
+            pluginFolder.mkdir();
+        }
         databaseConnectionConfiguration = loadDatabaseConnectionConfiguration();
     }
 
@@ -35,15 +38,19 @@ public class JsonManager {
         T config = null;
         String fileLocation = IoUtils.getPathOfFileInFolder(pluginFolder, path);
         try {
-            config = gson.fromJson(Files.newBufferedReader(Paths.get(fileLocation)), clazz);
-            if(config==null){
-                plugin.getLogger().info("Intializing " + path + "...");
-                config = clazz.newInstance();
-                gson.toJson(config, new FileWriter(fileLocation));
+            File configFile = new File(fileLocation);
+            if(configFile.exists()){
+                config = gson.fromJson(Files.newBufferedReader(configFile.toPath()), clazz);
+            }else{
+                plugin.logInfo("Intializing " + path + "...");
+                config = clazz.getDeclaredConstructor().newInstance();
+                Writer writer = new FileWriter(fileLocation);
+                gson.toJson(config, writer);
+                writer.flush();
+                writer.close();
             }
-        } catch (IOException e) {
-            plugin.logError(e.getMessage());
-        } catch (InstantiationException | IllegalAccessException ignored) {
+        } catch (Exception e) { //This can have like 5 different exceptions thrown
+            e.printStackTrace();
         }
         return config;
     }
