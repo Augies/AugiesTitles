@@ -1,9 +1,9 @@
 package io.augies.titlesplugin;
 
-import io.augies.titlesplugin.config.VaultConfiguration;
 import io.augies.titlesplugin.manager.CommandManager;
-import io.augies.titlesplugin.manager.io.DatabaseConnectionManager;
+import io.augies.titlesplugin.manager.VaultManager;
 import io.augies.titlesplugin.manager.io.JsonManager;
+import io.augies.titlesplugin.manager.io.storage.StorageManager;
 import org.bukkit.Bukkit;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -11,10 +11,9 @@ import org.bukkit.plugin.java.JavaPlugin;
 public final class TitlesPlugin extends JavaPlugin {
     private static TitlesPlugin instance;
 
-    private DatabaseConnectionManager databaseConnectionManager;
-
     private CommandManager commandsManager;
     private JsonManager jsonManager;
+    private StorageManager storageManager;
 
     @Override
     public void onEnable() {
@@ -28,15 +27,15 @@ public final class TitlesPlugin extends JavaPlugin {
             return;
         }
 
-        if(!VaultConfiguration.initializeVault()){
+        if(!VaultManager.initializeVault()){
             logError("Vault is not loaded! Features of this plugin likely won't work!");
         }
         logInfo("Loading Commands Manager");
-        this.commandsManager = new CommandManager();
+        commandsManager = new CommandManager();
         logInfo("Loading Json Manager");
-        this.jsonManager = new JsonManager();
-        logInfo("Loading Database Connection Manager");
-        this.databaseConnectionManager = new DatabaseConnectionManager();
+        jsonManager = new JsonManager();
+        logInfo("Loading Storage Manager");
+        storageManager = new StorageManager();
         // Plugin startup logic
 
     }
@@ -44,9 +43,10 @@ public final class TitlesPlugin extends JavaPlugin {
     @Override
     public void onDisable() {
         instance = null;
-        this.commandsManager = null;
-        this.jsonManager = null;
-        this.databaseConnectionManager = null;
+        commandsManager = null;
+        jsonManager = null;
+        storageManager.onDisable();
+        storageManager = null;
         // Plugin shutdown logic
     }
 
@@ -57,6 +57,10 @@ public final class TitlesPlugin extends JavaPlugin {
 
     public void logError(String error){
         getLogger().severe(error);
+    }
+
+    public void logError(Throwable error){
+        getLogger().severe(error.getMessage());
     }
 
     public void logWarning(String warning){
@@ -89,7 +93,7 @@ public final class TitlesPlugin extends JavaPlugin {
         return jsonManager;
     }
 
-    public DatabaseConnectionManager getDatabaseConnectionManager() {
-        return databaseConnectionManager;
+    public StorageManager getStorageManager() {
+        return storageManager;
     }
 }

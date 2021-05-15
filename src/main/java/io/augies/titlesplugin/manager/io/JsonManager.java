@@ -3,7 +3,7 @@ package io.augies.titlesplugin.manager.io;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import io.augies.titlesplugin.TitlesPlugin;
-import io.augies.titlesplugin.config.DatabaseConnectionConfiguration;
+import io.augies.titlesplugin.config.StorageConfiguration;
 import io.augies.titlesplugin.util.IoUtils;
 
 import java.io.File;
@@ -16,7 +16,7 @@ public class JsonManager {
     private final File pluginFolder;
     private static final String databaseConnectionConfigPath = "databaseConfig.json";
 
-    private DatabaseConnectionConfiguration databaseConnectionConfiguration;
+    private StorageConfiguration storageConfiguration;
 
     private final Gson gson;
 
@@ -24,42 +24,46 @@ public class JsonManager {
         plugin = TitlesPlugin.getInstance();
         pluginFolder = plugin.getDataFolder();
         gson = new GsonBuilder().setPrettyPrinting().create();
-        reloadJsonConfigurations();
+        reloadJsonFiles();
     }
 
-    public void reloadJsonConfigurations(){
+    public void reloadJsonFiles(){
         if(!pluginFolder.exists()){
             pluginFolder.mkdir();
         }
-        databaseConnectionConfiguration = loadDatabaseConnectionConfiguration();
+        storageConfiguration = loadStorageConfiguration();
     }
 
-    public <T> T loadConfiguration(String path, Class<T> clazz){
-        T config = null;
+    public <T> T loadJson(String path, Class<T> clazz){
+        T object = null;
         String fileLocation = IoUtils.getPathOfFileInFolder(pluginFolder, path);
         try {
             File configFile = new File(fileLocation);
             if(configFile.exists()){
-                config = gson.fromJson(Files.newBufferedReader(configFile.toPath()), clazz);
+                object = gson.fromJson(Files.newBufferedReader(configFile.toPath()), clazz);
             }else{
                 plugin.logInfo("Intializing " + path + "...");
-                config = clazz.getDeclaredConstructor().newInstance();
+                object = clazz.getDeclaredConstructor().newInstance();
                 Writer writer = new FileWriter(fileLocation);
-                gson.toJson(config, writer);
+                gson.toJson(object, writer);
                 writer.flush();
                 writer.close();
             }
         } catch (Exception e) { //This can have like 5 different exceptions thrown
             e.printStackTrace();
         }
-        return config;
+        return object;
     }
 
-    public DatabaseConnectionConfiguration loadDatabaseConnectionConfiguration() {
-        return loadConfiguration(databaseConnectionConfigPath, DatabaseConnectionConfiguration.class);
+    public <T> T loadJson(File file, Class<T> clazz){
+        return loadJson(file.getPath(), clazz);
     }
 
-    public DatabaseConnectionConfiguration getDatabaseConnectionConfiguration(){
-        return this.databaseConnectionConfiguration;
+    public StorageConfiguration loadStorageConfiguration() {
+        return loadJson(databaseConnectionConfigPath, StorageConfiguration.class);
+    }
+
+    public StorageConfiguration getStorageConfiguration(){
+        return this.storageConfiguration;
     }
 }

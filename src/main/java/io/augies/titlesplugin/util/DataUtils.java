@@ -1,14 +1,14 @@
 package io.augies.titlesplugin.util;
 
-import io.augies.titlesplugin.config.DatabaseConnectionConfiguration;
+import io.augies.titlesplugin.config.StorageConfiguration;
 
 public class DataUtils {
-    public static String getConnectionString(DatabaseConnectionConfiguration databaseConnectionConfiguration){
+    public static String getConnectionString(StorageConfiguration storageConfiguration){
         return String.format("jdbc:mysql://%s:%d?user=%s&password=%s",
-                databaseConnectionConfiguration.getAddress(),
-                databaseConnectionConfiguration.getPort(),
-                databaseConnectionConfiguration.getUsername(),
-                databaseConnectionConfiguration.getPassword()
+                storageConfiguration.address,
+                storageConfiguration.port,
+                storageConfiguration.username,
+                storageConfiguration.password
         );
     }
 }

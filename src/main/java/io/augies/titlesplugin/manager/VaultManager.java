@@ -1,4 +1,4 @@
-package io.augies.titlesplugin.config;
+package io.augies.titlesplugin.manager;
 
 import io.augies.titlesplugin.TitlesPlugin;
 import net.milkbowl.vault.chat.Chat;
@@ -12,7 +12,7 @@ import static org.bukkit.Bukkit.getServer;
  * Loosely based off of example given on the github
  * repo for VaultAPI
  */
-public class VaultConfiguration {
+public class VaultManager {
     private static Chat chat;
     private static Economy economy;
     private static Permission permission;
