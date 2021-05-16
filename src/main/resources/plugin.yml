@@ -1,4 +1,4 @@
-name: TitlesPlugin
+name: AugiesTitles
 version: 1.0-SNAPSHOT
 main: io.augies.titlesplugin.TitlesPlugin
 api-version: 1.16
