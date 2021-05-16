@@ -4,7 +4,6 @@ import io.augies.titlesplugin.manager.CommandManager;
 import io.augies.titlesplugin.manager.VaultManager;
 import io.augies.titlesplugin.manager.io.JsonManager;
 import io.augies.titlesplugin.manager.io.storage.StorageManager;
-import org.bukkit.Bukkit;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -22,9 +21,6 @@ public final class TitlesPlugin extends JavaPlugin {
         if(!getDataFolder().exists()){
             logInfo("Performing first time plugin setup...");
             setup();
-            logError("UNLOADING THE PLUGIN. PLEASE CONFIGURE AND RELOAD THE PLUGIN");
-            Bukkit.getServer().getPluginManager().disablePlugin(this);
-            return;
         }
 
         if(!VaultManager.initializeVault()){
@@ -42,10 +38,10 @@ public final class TitlesPlugin extends JavaPlugin {
 
     @Override
     public void onDisable() {
+        storageManager.onDisable();
         instance = null;
         commandsManager = null;
         jsonManager = null;
-        storageManager.onDisable();
         storageManager = null;
         // Plugin shutdown logic
     }

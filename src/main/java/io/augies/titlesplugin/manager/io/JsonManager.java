@@ -8,13 +8,14 @@ import io.augies.titlesplugin.util.IoUtils;
 
 import java.io.File;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.io.Writer;
 import java.nio.file.Files;
 
 public class JsonManager {
     private final TitlesPlugin plugin;
     private final File pluginFolder;
-    private static final String databaseConnectionConfigPath = "databaseConfig.json";
+    private static final String databaseConfigPath = "databaseConfig.json";
 
     private StorageConfiguration storageConfiguration;
 
@@ -27,30 +28,39 @@ public class JsonManager {
         reloadJsonFiles();
     }
 
-    public void reloadJsonFiles(){
-        if(!pluginFolder.exists()){
+    public void reloadJsonFiles() {
+        if (!pluginFolder.exists()) {
             pluginFolder.mkdir();
         }
         storageConfiguration = loadStorageConfiguration();
     }
 
-    public <T> T loadJson(String path, Class<T> clazz){
-        T object = null;
-        String fileLocation = IoUtils.getPathOfFileInFolder(pluginFolder, path);
+    public boolean saveJson(String path, Object contents) {
         try {
-            File configFile = new File(fileLocation);
-            if(configFile.exists()){
+            gson.toJson(contents, new FileWriter(path));
+            return true;
+        } catch (IOException e) {
+            plugin.logError(e);
+            return false;
+        }
+    }
+
+    public <T> T loadJson(String path, Class<T> clazz) {
+        T object = null;
+        try {
+            File configFile = new File(path);
+            if (configFile.exists()) {
                 object = gson.fromJson(Files.newBufferedReader(configFile.toPath()), clazz);
-            }else{
+            } else {
                 plugin.logInfo("Intializing " + path + "...");
                 object = clazz.getDeclaredConstructor().newInstance();
-                Writer writer = new FileWriter(fileLocation);
+                Writer writer = new FileWriter(path);
                 gson.toJson(object, writer);
                 writer.flush();
                 writer.close();
             }
         } catch (Exception e) { //This can have like 5 different exceptions thrown
-            e.printStackTrace();
+            plugin.logError(e);
         }
         return object;
     }
@@ -60,7 +70,7 @@ public class JsonManager {
     }
 
     public StorageConfiguration loadStorageConfiguration() {
-        return loadJson(databaseConnectionConfigPath, StorageConfiguration.class);
+        return loadJson(IoUtils.getPathOfFileInFolder(pluginFolder, databaseConfigPath), StorageConfiguration.class);
     }
 
     public StorageConfiguration getStorageConfiguration(){

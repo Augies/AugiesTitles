@@ -18,7 +18,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class MySqlManager extends StorageTypeManager {
+public class MySqlStorageManager extends StorageTypeManager {
     private String connectionString = "";
     private Connection connection = null;
 
@@ -67,6 +67,7 @@ public class MySqlManager extends StorageTypeManager {
 
     @Override
     public List<PlayerToken> getAllPlayerTokens() {
+        //TODO
         return null;
     }
 
@@ -77,11 +78,36 @@ public class MySqlManager extends StorageTypeManager {
     }
 
     @Override
+    public boolean setTokensForPlayer(Player player, int amount) {
+        //TODO
+        return false;
+    }
+
+    @Override
     public Title getTitle(String identifier) {
+        //TODO
         return null;
     }
 
-    private boolean canSuccessfullyConnect(){
+    @Override
+    public boolean createTitle(String identifier, String title) {
+        //TODO
+        return false;
+    }
+
+    @Override
+    public boolean createGroupTitle(String group, String title) {
+        //TODO
+        return false;
+    }
+
+    @Override
+    public boolean removeTitle(String identifier) {
+        //TODO
+        return false;
+    }
+
+    private boolean canSuccessfullyConnect() {
         try {
             connection = DriverManager.getConnection(connectionString);
             return true;
