@@ -1,5 +1,6 @@
 plugins {
     id 'java'
+    id "org.sonarqube" version "3.2.0"
 }
 
 apply plugin: 'java'
@@ -33,4 +34,12 @@ dependencies {
     implementation 'net.milkbowl.vault:VaultAPI:1.7'
     implementation 'net.luckperms:api:5.3'
     implementation 'mysql:mysql-connector-java:8.0.24'
+}
+
+sonarqube {
+    properties {
+        property "sonar.projectKey", "Augies_AugiesTitles"
+        property "sonar.organization", "augies"
+        property "sonar.host.url", "https://sonarcloud.io"
+    }
 }
