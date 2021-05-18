@@ -16,6 +16,7 @@ public class AugiesTitlesCommand extends TitlesCommand {
                 "augiestitles",
                 Collections.singletonList("atitles")
         );
+        this.setPlayerOnly(true);
     }
 
     @Override
