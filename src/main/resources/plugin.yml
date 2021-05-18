@@ -1,8 +1,9 @@
-name: TitlesPlugin
-version: ${project.version}${build.number}
+name: AugiesTitles
+version: 1.0-SNAPSHOT
 main: io.augies.titlesplugin.TitlesPlugin
 api-version: 1.16
 prefix: AugiesTitles
 authors: [Augies]
 description: An easy plugin for managing players' titles
 website: https://github.com/Augies/AugiesTitles
+depend: [Vault]
