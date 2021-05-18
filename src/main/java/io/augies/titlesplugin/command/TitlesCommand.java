@@ -3,6 +3,7 @@ package io.augies.titlesplugin.command;
 import io.augies.titlesplugin.TitlesPlugin;
 import org.bukkit.command.Command;
 import org.bukkit.command.PluginIdentifiableCommand;
+import org.bukkit.plugin.Plugin;
 
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -121,11 +122,16 @@ public abstract class TitlesCommand extends Command implements PluginIdentifiabl
         return label;
     }
 
-    public String getTopLabel(){
+    public String getTopLabel() {
         return this.topLabel;
     }
 
-    public int getCommandLevel(){
+    public int getCommandLevel() {
         return this.commandLevel;
+    }
+
+    @Override
+    public Plugin getPlugin() {
+        return plugin;
     }
 }

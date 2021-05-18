@@ -1,5 +1,11 @@
 language: java
 sudo: false
+addons:
+  sonarcloud:
+    organization: "augies"
+
+script:
+  - sonar-scanner
 
 jdk:
   - openjdk11
